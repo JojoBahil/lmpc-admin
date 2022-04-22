@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal_small" role="document">  
             <div class="modal-content">  
                 <div class="modal-header" style="background-image:url('image/modal-heading.png');background-size:cover;text-align:center;"> 
-                    <h5 class="modal-title">Reject Excel File</h5>  
+                    <h5 class="modal-title">Reject Custom Upadter</h5>  
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>  
                 <div class="modal-body" id="bot" class="bot">

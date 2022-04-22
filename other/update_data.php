@@ -119,7 +119,7 @@ if(isset($_POST['btn_update_revert_records'])){
     }
 }
 
-//Update for Reject 01/03/2022
+//CUSTOM UPDATER
 if(isset($_POST['btn_update_reject_records_01032022'])){
     if($_FILES['file_application_rejected_report_01032022']['name'] != ''){
         $allowed_extension = array('xls','csv','xlsx');
@@ -140,9 +140,13 @@ if(isset($_POST['btn_update_reject_records_01032022'])){
                     'tes_award_number' => $row[1]
                 );
 
-                extract($insert_data);        
+                extract($insert_data);    
 
-                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Rejected', application_datfile_export_date = NULL, application_datfile_name = NULL, application_datfile_batch = NULL, application_datfile_sequence = NULL, remarks = 'Your application was Rejected due to invalid inputs, please check carefully your inputs and re-finalize your application' WHERE award_no = '$tes_award_number' AND status = 'App-DAT' AND wallet_number IS NULL AND device_number IS NULL";
+                /* REJECT UPDATE WITH DEFAULT REMARKS (Your application was Rejected due to invalid inputs, please check carefully your inputs and re-finalize your application) */
+                // $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Rejected', application_datfile_export_date = NULL, application_datfile_name = NULL, application_datfile_batch = NULL, application_datfile_sequence = NULL, remarks = 'Your application was Rejected due to invalid inputs, please check carefully your inputs and re-finalize your application' WHERE award_no = '$tes_award_number' AND status = 'App-DAT' AND wallet_number IS NULL AND device_number IS NULL";
+                
+                // REVERT FROM App-DAT INTO SubToUniFAST FOR RE EXPORTING
+                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET application_datfile_export_date = NULL, application_datfile_name = NULL, application_datfile_batch = NULL, application_datfile_sequence = NULL, status = 'SubToUniFAST' WHERE status = 'App-DAT' AND award_no = '$tes_award_number';";
                 mysqli_query($connect, $sqlUpdateDetails);
 
                 if(mysqli_affected_rows($connect) >= 1){

@@ -113,7 +113,7 @@
                                              Search Specific Grantee
                                         </legend>
                                         <div class="row">
-                                             <div class="col-lg-6" style=''>                                             
+                                             <div class="col-lg-6">                                             
                                                   <label style='font-size:11px;'>TES Award Number</label>
                                                   <input type="text" name="txt_award_no" class="txt_award_no" id="txt_award_no" style="width:100%">               
                                              </div>
