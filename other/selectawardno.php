@@ -418,6 +418,28 @@
                                 <label>'.$device_number.'</label>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td colspan = "4" style="vertical-align:middle;background-color:#ffa665;border-color:#414141;">
+                                <label style="font-size:18px;"><b>Account Details</b></label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="vertical-align:middle;background-color:#aaa;border-color:#414141;">
+                                <label><b>Username:</b></label>
+                            </td>
+                            <td style="vertical-align:middle;background-color:rgba(255,255,255,0.9);border-color:#414141;">
+                                <label>'.$award_no.'</label>
+                            </td>
+                            <td style="vertical-align:middle;background-color:#aaa;border-color:#414141;">
+                                <label><b>Password:</b></label>
+                            </td>
+                            <td style="vertical-align:middle;background-color:rgba(255,255,255,0.9);border-color:#414141;">
+                                <label>'.$tin.'</label>
+                            </td>
+                        </tr>
+                        
                         ';  
             }  
         $output .= "</table></div>  
