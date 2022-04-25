@@ -8,7 +8,7 @@
         $awardno = $_POST["award_no"];
         $output = '';  
         include('dbconnect.php');
-        $query = "SELECT * FROM vw_complete_teslbp_data_2020_2021 WHERE award_no = '".$awardno."'"; 
+        $query = "SELECT * FROM tbl_lbp_form WHERE award_no = '".$awardno."'"; 
         $result = mysqli_query($connect, $query);   
         $output .= '
             <div class="table-responsive">  
@@ -48,44 +48,45 @@
                     $salary = mysqli_real_escape_string($connect, $row_salary['salary_range']);
                 }
                 
-                $award_no = mysqli_real_escape_string($connect, $row['award_no']);
-                $firstname = mysqli_real_escape_string($connect, $row["fname"]);
-                $middlename = mysqli_real_escape_string($connect, $row["mname"]);
-                $lastname = mysqli_real_escape_string($connect, $row["lname"]);
-                $birthdate = mysqli_real_escape_string($connect, $row["birthdate"]);
-                $birthplace = mysqli_real_escape_string($connect, $row["birth_place"]);
-                $sex = mysqli_real_escape_string($connect, $row["sex"]);
-                $nationality = mysqli_real_escape_string($connect, $row["nationality"]);
-                $profession = mysqli_real_escape_string($connect, $row["profession"]);
-                $mfirstname = mysqli_real_escape_string($connect, $row["m_fname"]);
-                $mmiddlename = mysqli_real_escape_string($connect, $row["m_mname"]);
-                $mlastname = mysqli_real_escape_string($connect, $row["m_lname"]);
-                $contact = mysqli_real_escape_string($connect, $row["contact"]);
-                $email = mysqli_real_escape_string($connect, $row["email"]);
-                $present_street = mysqli_real_escape_string($connect, $row["present_street"]);
-                $present_barangay = mysqli_real_escape_string($connect, $row["present_barangay"]);
-                $present_city = mysqli_real_escape_string($connect, $row["present_city"]);
-                $present_province = mysqli_real_escape_string($connect, $row["present_province"]);
-                $present_zip = mysqli_real_escape_string($connect, $row["present_zip"]);
-                $permanent_street = mysqli_real_escape_string($connect, $row["permanent_street"]);
-                $permanent_barangay = mysqli_real_escape_string($connect, $row["permanent_barangay"]);
-                $permanent_city = mysqli_real_escape_string($connect, $row["permanent_city"]);
-                $permanent_province = mysqli_real_escape_string($connect, $row["permanent_province"]);
-                $permanent_zip = mysqli_real_escape_string($connect, $row["permanent_zip"]);
-                $ac_year = mysqli_real_escape_string($connect, $row["ac_year"]);
-                $lbp_branch = mysqli_real_escape_string($connect, $row["lbp_branch"]);
-                $tin = mysqli_real_escape_string($connect, $row["tin"]);
-                $emboss_name = mysqli_real_escape_string($connect, $row["emboss_name"]);
-                $date_exported = mysqli_real_escape_string($connect, $row["date_exported"]);
-                $pdf_attachment = mysqli_real_escape_string($connect, $row["pdf_attachment"]);
-                $privacy_agreement = mysqli_real_escape_string($connect, $row["privacy_agreement"]);
-                $editable_fields = mysqli_real_escape_string($connect, $row["editable_fields"]);
-                $pickup_at_hei = mysqli_real_escape_string($connect, $row["pickup_at_hei"]);
-                $application_datfile_export_date = mysqli_real_escape_string($connect, $row["application_datfile_export_date"]);
-                $wallet_number = mysqli_real_escape_string($connect, $row["wallet_number"]);
-                $device_number = mysqli_real_escape_string($connect, $row["device_number"]);
-                $transaction_datfile_export_date = mysqli_real_escape_string($connect, $row["transaction_datfile_export_date"]);
-                $status = mysqli_real_escape_string($connect, $row["status"]);
+                $award_no = $row['award_no'];
+                $firstname = $row["fname"];
+                $middlename = $row["mname"];
+                $lastname = $row["lname"];
+                $birthdate = $row["birthdate"];
+                $birthplace = $row["birth_place"];
+                $sex = $row["sex"];
+                $nationality = $row["nationality"];
+                $profession = $row["profession"];
+                $mfirstname = $row["m_fname"];
+                $mmiddlename = $row["m_mname"];
+                $mlastname = $row["m_lname"];
+                $contact = $row["contact"];
+                $email = $row["email"];
+                $present_street = $row["present_street"];
+                $present_barangay = $row["present_barangay"];
+                $present_city = $row["present_city"];
+                $present_province = $row["present_province"];
+                $present_zip = $row["present_zip"];
+                $permanent_street = $row["permanent_street"];
+                $permanent_barangay = $row["permanent_barangay"];
+                $permanent_city = $row["permanent_city"];
+                $permanent_province = $row["permanent_province"];
+                $permanent_zip = $row["permanent_zip"];
+                $ac_year = $row["ac_year"];
+                $lbp_branch = $row["lbp_branch"];
+                $tin = $row["tin"];
+                $emboss_name = $row["emboss_name"];
+                $date_exported = $row["date_exported"];
+                $pdf_attachment = $row["pdf_attachment"];
+                $privacy_agreement = $row["privacy_agreement"];
+                $editable_fields = $row["editable_fields"];
+                $pickup_at_hei = $row["pickup_at_hei"];
+                $application_datfile_export_date = $row["application_datfile_export_date"];
+                $wallet_number = $row["wallet_number"];
+                $device_number = $row["device_number"];
+                $transaction_datfile_export_date = $row["transaction_datfile_export_date"];
+                $status = $row["status"];
+                $def_password = $row["def_password"];
 
                 if(!empty($pdf_attachment) && empty($wallet_number) && empty($device_number) && empty($transaction_datfile_export_date)){
                     $disable = '';
@@ -433,10 +434,10 @@
                                 <label>'.$award_no.'</label>
                             </td>
                             <td style="vertical-align:middle;background-color:#aaa;border-color:#414141;">
-                                <label><b>Password:</b></label>
+                                <label><b>Default Password:</b></label>
                             </td>
                             <td style="vertical-align:middle;background-color:rgba(255,255,255,0.9);border-color:#414141;">
-                                <label>'.$tin.'</label>
+                                <label>'.$def_password.'</label>
                             </td>
                         </tr>
                         
@@ -446,6 +447,7 @@
         <div>
             <input type='hidden' class='hdn_awardno' id='hdn_awardno' value='$awardno'>
             <input type='button' name='btn_enable_editing' class='btn btn-success btn_enable_editing' id='btn_enable_editing' value='Enable Editing' ".$disable.">
+            <input type='button' name='btn_reset_password' class='btn btn-warning btn_reset_password' id='btn_reset_password' value='Reset Password'>
         </div>
         
         <script>
@@ -453,6 +455,12 @@
             var awardno = document.getElementById('hdn_awardno').value;
             btn.addEventListener('click', function() {
                 document.location.href = 'other/unfinalize.php?awardno='+awardno;
+            });
+
+            var btn = document.getElementById('btn_reset_password');
+            var awardno = document.getElementById('hdn_awardno').value;
+            btn.addEventListener('click', function() {
+                document.location.href = 'other/reset_password.php?awardno='+awardno;
             });
         </script>"; 
         echo $output;
