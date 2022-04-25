@@ -18,7 +18,7 @@
         <tbody>
             <?php
                 if(empty($_POST['ac_year']) && empty($_POST['hei_uii'])){
-                    $sqlGrantees = "SELECT * FROM vw_complete_teslbp_data_2019_2020";
+                    $sqlGrantees = "SELECT * FROM tbl_lbp_form";
                     $resGrantees = mysqli_query($connect, $sqlGrantees);
                     $checkGrantees = mysqli_num_rows($resGrantees);
                     if($checkGrantees){
@@ -54,7 +54,7 @@
                     }
                 }
                 elseif(!empty($_POST['ac_year']) && empty($_POST['hei_uii'])){
-                    $sqlGrantees = "SELECT * FROM vw_complete_teslbp_data_2019_2020 WHERE ac_year = '".$_POST['ac_year']."'";
+                    $sqlGrantees = "SELECT * FROM tbl_lbp_form WHERE ac_year = '".$_POST['ac_year']."'";
                     $resGrantees = mysqli_query($connect, $sqlGrantees);
                     $checkGrantees = mysqli_num_rows($resGrantees);
                     if($checkGrantees){
@@ -90,7 +90,7 @@
                     }
                 }
                 elseif(empty($_POST['ac_year']) && !empty($_POST['hei_uii'])){
-                    $sqlGrantees = "SELECT * FROM vw_complete_teslbp_data_2019_2020 WHERE hei_uii = '".$_POST['hei_uii']."'";
+                    $sqlGrantees = "SELECT * FROM tbl_lbp_form WHERE hei_uii = '".$_POST['hei_uii']."'";
                     $resGrantees = mysqli_query($connect, $sqlGrantees);
                     $checkGrantees = mysqli_num_rows($resGrantees);
                     if($checkGrantees){
@@ -126,7 +126,7 @@
                     }
                 }
                 elseif(!empty($_POST['ac_year']) && !empty($_POST['hei_uii'])){
-                    $sqlGrantees = "SELECT * FROM vw_complete_teslbp_data_2019_2020 WHERE ac_year = '".$_POST['ac_year']."' AND hei_uii = '".$_POST['hei_uii']."'";
+                    $sqlGrantees = "SELECT * FROM tbl_lbp_form WHERE ac_year = '".$_POST['ac_year']."' AND hei_uii = '".$_POST['hei_uii']."'";
                     $resGrantees = mysqli_query($connect, $sqlGrantees);
                     $checkGrantees = mysqli_num_rows($resGrantees);
                     if($checkGrantees){

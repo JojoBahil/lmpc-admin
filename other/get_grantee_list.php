@@ -5,7 +5,7 @@
 
 <div class='form-group'>
         <?php
-            $sqlTotalGranteesInHEI = "SELECT Count(*) FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."'";
+            $sqlTotalGranteesInHEI = "SELECT Count(*) FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."'";
             $resTotalGranteesInHEI = mysqli_query($connect, $sqlTotalGranteesInHEI);
             $checkTotalGranteesInHEI = mysqli_num_rows($resTotalGranteesInHEI);
             if($checkTotalGranteesInHEI > 0){
@@ -17,7 +17,7 @@
                 $totalGrantee = 0;
             } 
 
-            $sqlFinalized = "SELECT Count(*) FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Finalized'";
+            $sqlFinalized = "SELECT Count(*) FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Finalized'";
             $resFinalized = mysqli_query($connect, $sqlFinalized);
             $checkFinalized = mysqli_num_rows($resFinalized);
             if($checkFinalized > 0){
@@ -29,7 +29,7 @@
                 $finalized = 0;
             }
 
-            $sqlAppDAT = "SELECT Count(*) FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'App-DAT'";
+            $sqlAppDAT = "SELECT Count(*) FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'App-DAT'";
             $resAppDAT = mysqli_query($connect, $sqlAppDAT);
             $checkAppDAT = mysqli_num_rows($resAppDAT);
             if($checkAppDAT > 0){
@@ -41,7 +41,7 @@
                 $appDAT = 0;
             }
 
-            $sqlApproved = "SELECT Count(*) FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Approved'";
+            $sqlApproved = "SELECT Count(*) FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Approved'";
             $resApproved = mysqli_query($connect, $sqlApproved);
             $checkApproved = mysqli_num_rows($resApproved);
             if($checkApproved > 0){
@@ -53,7 +53,7 @@
                 $approved = 0;
             }
 
-            $sqlClaimed = "SELECT Count(*) FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Claimed'";
+            $sqlClaimed = "SELECT Count(*) FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Claimed'";
             $resClaimed = mysqli_query($connect, $sqlClaimed);
             $checkClaimed = mysqli_num_rows($resClaimed);
             if($checkClaimed > 0){
@@ -65,7 +65,7 @@
                 $claimed = 0;
             }
 
-            $sqlNotFinalized = "SELECT Count(*) FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Not Finalized'";
+            $sqlNotFinalized = "SELECT Count(*) FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."' AND status = 'Not Finalized'";
             $resNotFinalized = mysqli_query($connect, $sqlNotFinalized);
             $checkNotFinalized = mysqli_num_rows($resNotFinalized);
             if($checkNotFinalized > 0){
@@ -115,7 +115,7 @@
             <?php
                 $hei_uii = $_POST['hei_uii'];
 
-                $sqlGrantees = "SELECT * FROM vw_for_admin WHERE hei_uii ='".$_POST['hei_uii']."'";
+                $sqlGrantees = "SELECT * FROM tbl_lbp_form WHERE hei_uii ='".$_POST['hei_uii']."'";
                 $resGrantees = mysqli_query($connect, $sqlGrantees);
                 $checkGrantees = mysqli_num_rows($resGrantees);
                 if($checkGrantees > 0){

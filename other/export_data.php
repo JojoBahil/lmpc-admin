@@ -1962,7 +1962,7 @@ if(isset($_POST['btn_generate_datfile'])){
     $currenttime = date('His');
 
     $sql = "SELECT wallet_number, device_number, fname, mname, lname
-            FROM vw_for_admin 
+            FROM tbl_lbp_form 
             WHERE 
             ac_year = '".$_POST['sel_academic_year']."' 
             AND date_exported != '' 

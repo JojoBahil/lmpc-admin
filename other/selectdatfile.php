@@ -10,7 +10,7 @@
         include('dbconnect.php');
         
         //TOTAL HEIS
-        $sqlTotalHEIs = "SELECT DISTINCT(hei_uii) FROM vw_for_admin WHERE application_datfile_name = '$export_name'";
+        $sqlTotalHEIs = "SELECT DISTINCT(hei_uii) FROM tbl_lbp_form WHERE application_datfile_name = '$export_name'";
         $resTotalHEIs = mysqli_query($connect, $sqlTotalHEIs);
         $checkTotalHEIs = mysqli_num_rows($resTotalHEIs);
         if($checkTotalHEIs > 0){
@@ -21,7 +21,7 @@
         }
 
         //TOTAL GRANTEES
-        $sqlTotalGrantees = "SELECT Count(*) FROM vw_for_admin WHERE application_datfile_name = '".$export_name."'";
+        $sqlTotalGrantees = "SELECT Count(*) FROM tbl_lbp_form WHERE application_datfile_name = '".$export_name."'";
         $resTotalGrantees = mysqli_query($connect, $sqlTotalGrantees);
         $checkTotalGrantees = mysqli_num_rows($resTotalGrantees);
         if($checkTotalGrantees > 0){
@@ -29,7 +29,7 @@
             $total_grantees = $row['Count(*)'];
         }
         
-        $query = "SELECT hei_uii, Count(*) FROM vw_for_admin WHERE application_datfile_name ='$export_name' GROUP BY hei_uii"; 
+        $query = "SELECT hei_uii, Count(*) FROM tbl_lbp_form WHERE application_datfile_name ='$export_name' GROUP BY hei_uii"; 
         $result = mysqli_query($connect, $query); 
         $check = mysqli_num_rows($result);
         

@@ -23,7 +23,7 @@
         //             $zip_export_max_counter = $zip_export_max_counter;
         //         }
 
-        $sqlDownload = "SELECT DISTINCT(application_datfile_batch) FROM vw_for_admin WHERE application_datfile_name ='".$appDATName."' AND ac_year='".$CURRENT_ACADEMIC_YEAR."' AND pdf_attachment != ''";
+        $sqlDownload = "SELECT DISTINCT(application_datfile_batch) FROM tbl_lbp_form WHERE application_datfile_name ='".$appDATName."' AND ac_year='".$CURRENT_ACADEMIC_YEAR."' AND pdf_attachment != ''";
         $resDownload = mysqli_query($connect, $sqlDownload);
         $checkDownload = mysqli_num_rows($resDownload);
         if($checkDownload > 0){

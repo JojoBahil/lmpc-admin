@@ -31,7 +31,7 @@
                                 <select name='sel_reexport' class='sel_reexport' id='sel_reexport' style="font-size:13px;width:100%;height:30px;border-radius:3px;margin-bottom:20px;">
                                     <option></option>
                                     <?php
-                                        $sqlAvailableName = "SELECT DISTINCT(application_datfile_name) FROM vw_for_admin WHERE application_datfile_name IS NOT NULL";
+                                        $sqlAvailableName = "SELECT DISTINCT(application_datfile_name) FROM tbl_lbp_form WHERE application_datfile_name IS NOT NULL";
                                         $resAvaialbleName = mysqli_query($connect, $sqlAvailableName);
                                         $checkAvailableName = mysqli_num_rows($resAvaialbleName);
                                         if($checkAvailableName > 0){
