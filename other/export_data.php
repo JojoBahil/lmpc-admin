@@ -1632,13 +1632,20 @@ if(isset($_POST['btn_generate_datfile'])){
             $row_number = $row_number;
                 
             //AUTOMATE EMBOSS NAME
+            $new_emboss_mname;
             $mname_emboss = $mname;
-            while(strlen($mname_emboss) > 1){
-                $mname_emboss = substr($mname_emboss, 0, -1);
+            if(strlen($mname_emboss) > 1){
+                while(strlen($mname_emboss) > 1){
+                    $mname_emboss = substr($mname_emboss, 0, -1);
+                }
+                $new_emboss_mname = $mname_emboss;
+                $emboss_name = $fname.' '.$new_emboss_mname.' '.$lname;
             }
-            $new_emboss_mname = $mname_emboss;            
-            $emboss_name = $fname.' '.$new_emboss_mname.' '.$lname;
-            if (strlen($emboss_name) > 22){
+            elseif($mname_emboss == '' || $mname_emboss == NULL){
+                $emboss_name = $fname.' '.$lname;
+            }
+
+            if(strlen($emboss_name) > 22){
                 $string_difference = strlen($emboss_name) - 22;
                 $fname_new = substr($fname, 0, -$string_difference);
                 $emboss_name = $fname_new.' '.$new_emboss_mname.' '.$lname; 
