@@ -31,7 +31,7 @@
         $def_password = $row['def_password'];
         $md5password = md5($def_password);
         
-        $updateResetPassword = "UPDATE tbl_lbp_form SET def_password = '".$md5password."' WHERE award_no = '".$awardno."'";
+        $updateResetPassword = "UPDATE tbl_lbp_form SET password = '".$md5password."' WHERE award_no = '".$awardno."'";
         if(mysqli_query($connect, $updateResetPassword)){
             // SEND EMAIL TO NOTIFY GRANTEE        
             $mailheader = 'FROM: UniFAST ICT Unit<unifastgov@chedvs01.ched.gov.ph>'."\r\n".'CC: unifast_teslmpc@ched.gov.ph'."\r\n".'Reply-To: unifast_teslmpc@ched.gov.ph'."\r\n".'MIME-Version: 1.0'."\r\n".'Content-type: text/html; charset=iso-8859-1';
