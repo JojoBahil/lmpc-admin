@@ -35,7 +35,7 @@
         if(mysqli_query($connect, $updateResetPassword)){
             // SEND EMAIL TO NOTIFY GRANTEE        
             $mailheader = 'FROM: UniFAST ICT Unit<unifastgov@chedvs01.ched.gov.ph>'."\r\n".'CC: unifast_teslmpc@ched.gov.ph'."\r\n".'Reply-To: unifast_teslmpc@ched.gov.ph'."\r\n".'MIME-Version: 1.0'."\r\n".'Content-type: text/html; charset=iso-8859-1';
-            $msg = "<b>Full Name: </b>".$fname." ".$mname." ".$lname."<br><b>TES Award Number: </b>".$award_no."<br><b>Region: </b>".$hei_region_nir."<br><b>HEI Unique ID: </b>".$hei_uii."<br><b>HEI Name: </b>".$hei_name."<br><b>Application Status: </b>".$status."<br><br><br><br>Good day ".$title.". ".$fname." ".$lname.",<br><p>Your password was reset to default due as requested. Please use the following credential to access your LMPC Portal account: <br><br> <b>Username: </b> ".$award_no." <br><b>Password: </b>".$def_password."</p><br> Thank you.<br><br><br><br><b>Information and Communication Technology Unit</b><br>UniFAST Secretariat - Central Office";
+            $msg = "<b>Full Name: </b>".$fname." ".$mname." ".$lname."<br><b>TES Award Number: </b>".$award_no."<br><b>Region: </b>".$hei_region_nir."<br><b>HEI Unique ID: </b>".$hei_uii."<br><b>HEI Name: </b>".$hei_name."<br><b>Application Status: </b>".$status."<br><br><br><br>Good day ".$title.". ".$fname." ".$lname.",<br><p>Your password was reset to default as requested. Please use the following credential to access your LMPC Portal account: <br><br> <b>Username: </b> ".$award_no." <br><b>Password: </b>".$def_password."</p><br> Thank you.<br><br><br><br><b>Information and Communication Technology Unit</b><br>UniFAST Secretariat - Central Office";
 
             $msg = wordwrap($msg,70);
 
