@@ -486,6 +486,7 @@
                                 <th width="">Approved</th>
                                 <th width="">Rejected</th>
                                 <th width="">Total Grantees</th> 
+                                <th width="">Approved Percentage</th> 
                             </tr>  
                         </thead>  
                         <tbody>
@@ -496,10 +497,10 @@
                                 $checkHEIStatusList = mysqli_num_rows($resHEIStatusList);
                                 if($checkHEIStatusList > 0){
                                     while($row = mysqli_fetch_assoc($resHEIStatusList)){
-                                        $hei_region_nir = mysqli_real_escape_string($connect, $row['hei_region_nir']);
-                                        $hei_it = mysqli_real_escape_string($connect, $row['hei_it']);
-                                        $hei_uii = mysqli_real_escape_string($connect, $row['hei_uii']);
-                                        $hei_name = mysqli_real_escape_string($connect, $row['hei_name']);
+                                        $hei_region_nir = $row['hei_region_nir'];
+                                        $hei_it = $row['hei_it'];
+                                        $hei_uii = $row['hei_uii'];
+                                        $hei_name = utf8_decode($row['hei_name']);
                                         
                                         // $action = '<input type="submit" class="btn btn-primary btn_ view_data" value="View" data-toggle="modal" id="'.$awardno.'" name="'.$awardno.'" data-target="#modal_profile" style="padding:5px; font-size:10px; padding-top:2px; padding-bottom:2px;">
                                         //            <input type="button" class="btn btn-success btn_unfinalize_data" value="Unfinalize" style="padding:5px; font-size:10px; padding-top:2px; padding-bottom:2px;" '.$disable.'>
@@ -593,8 +594,38 @@
                                             }
                                         }
                                         else{
-                                            $total = 0;
+                                            $totalRegion = 0;
                                         }
+
+                                        //Percentage of Approved Application
+                                        $approvedOverallPercentage = ($approvedRegion/$totalRegion)*100;
+                                        if(is_nan($approvedOverallPercentage)==true){
+                                            $approvedOverallPercentage = 0;
+                                            $percentColumn = "<td style='color:#808080;'><b>$approvedOverallPercentage</b></td>";
+                                        }
+                                        else{
+                                            $approvedOverallPercentage = round($approvedOverallPercentage,2);
+                                            if($approvedOverallPercentage == 100){
+                                                $percentColumn = "<td style='color:#16a04a;'><b>$approvedOverallPercentage%</b></td>";
+                                            }
+                                            elseif($approvedOverallPercentage >= 90 && $approvedOverallPercentage <= 99){
+                                                $percentColumn = "<td style='color:#91c74b;'><b>$approvedOverallPercentage%</b></td>";
+                                            }
+                                            elseif($approvedOverallPercentage >= 70 && $approvedOverallPercentage <= 89){
+                                                $percentColumn = "<td style='color:#cccc00;'><b>$approvedOverallPercentage%</b></td>";
+                                            }
+                                            elseif($approvedOverallPercentage >= 40 && $approvedOverallPercentage <= 69){
+                                                $percentColumn = "<td style='color:#dbac00;'><b>$approvedOverallPercentage%</b></td>";
+                                            }
+                                            elseif($approvedOverallPercentage >= 30 && $approvedOverallPercentage <= 39){
+                                                $percentColumn = "<td style='color:#faa41b;'><b>$approvedOverallPercentage%</b></td>";
+                                            }
+                                            elseif($approvedOverallPercentage >= 0 && $approvedOverallPercentage <= 29){
+                                                $percentColumn = "<td style='color:#f26223;'><b>$approvedOverallPercentage%</b></td>";
+                                            }
+                                        }
+                                        
+                                        
 
                                         echo "
                                             <tr>
@@ -608,6 +639,7 @@
                                                 <td>$approvedRegion</td>
                                                 <td>$rejectedRegion</td>
                                                 <td>$totalRegion</td>
+                                                $percentColumn
                                             </tr>
                                         ";
                                     }
