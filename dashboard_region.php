@@ -715,6 +715,7 @@
     <script>
         $(document).ready(function(){ 
             $('#table_heis_region').dataTable({
+                "aaSorting": [[10,'desc'],[9,'desc']],
                 "bPaginate": true,
                 "bLengthChange": false,
                 "bFilter": true,
