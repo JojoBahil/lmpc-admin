@@ -23,48 +23,24 @@
         <div class="container" style="background-color:rgba(255,255,255,0.9);margin-top:20px;border-radius:3px;">
         <h4 style="margin-bottom:10px;padding-top:10px;font-family:helvetica;color:#444;">Dashboard</h4>
         <?php    
-            $sqlOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE (status != '' AND status != 'WAIVED/DELISTED') AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resOnGoing = mysqli_query($connect, $sqlOnGoing);
-            $checkOnGoing = mysqli_num_rows($resOnGoing);
-            if($checkOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resOnGoing)){
-                    $onGoing = $row['Count(*)'];
+
+        //OVERALL TOTAL GRANTEES
+            $sqlTotalGrantees = "SELECT Count(*) FROM tbl_lbp_form WHERE active_grantee = 'YES' AND status != 'WAIVED/DELISTED'";
+            $resTotalGrantees = mysqli_query($connect, $sqlTotalGrantees);
+            $checkTotalGrantees = mysqli_num_rows($resTotalGrantees);
+            if($checkTotalGrantees > 0){
+                while($row=mysqli_fetch_assoc($resTotalGrantees)){
+                    $totalGrantees = $row['Count(*)'];
                 }
             }
             else{
-                $onGoing = 0;
+                $totalGrantees = 0;
             }
 
 
 
-            $sqlNewGrantees = "SELECT Count(*) FROM tbl_lbp_form WHERE (status != '' AND status != 'WAIVED/DELISTED') AND tag = 'NEW'";
-            $resNewGrantees = mysqli_query($connect, $sqlNewGrantees);
-            $checkNewGrantees = mysqli_num_rows($resNewGrantees);
-            if($checkNewGrantees > 0){
-                while($row=mysqli_fetch_assoc($resNewGrantees)){
-                    $newGrantees = $row['Count(*)'];
-                }
-            }
-            else{
-                $newGrantees = 0;
-            }
-
-            $sqlOnGoingGrantees = "SELECT Count(*) FROM tbl_lbp_form WHERE (status != '' AND status != 'WAIVED/DELISTED') AND tag = 'ON-GOING'";
-            $resOnGoingGrantees = mysqli_query($connect, $sqlOnGoingGrantees);
-            $checkOnGoingGrantees = mysqli_num_rows($resOnGoingGrantees);
-            if($checkOnGoingGrantees > 0){
-                while($row=mysqli_fetch_assoc($resOnGoingGrantees)){
-                    $onGoingGrantees = $row['Count(*)'];
-                }
-            }
-            else{
-                $onGoingGrantees = 0;
-            }
-
-
-
-            // OVERALL NEW + ON GOING GRANTEES
-            $sqlFinalized = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Finalized' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
+            // OVERALL (FINALIZED)
+            $sqlFinalized = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Finalized' AND active_grantee = 'YES'";
             $resFinalized = mysqli_query($connect, $sqlFinalized);
             $checkFinalized = mysqli_num_rows($resFinalized);
             if($checkFinalized > 0){
@@ -75,24 +51,11 @@
             else{
                 $finalized = 0;
             }
-            $finalizedPercent = $finalized/$onGoing;
+            $finalizedPercent = $finalized/$totalGrantees;
             $finalizedPercent = round($finalizedPercent*100,2).'%';
             
-            $sqlUnfinalizeRequest = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'REQTOUNFINALIZE' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resUnfinalizeRequest = mysqli_query($connect, $sqlUnfinalizeRequest);
-            $checkUnfinalizeRequest = mysqli_num_rows($resUnfinalizeRequest);
-            if($checkUnfinalizeRequest > 0){
-                while($row=mysqli_fetch_assoc($resUnfinalizeRequest)){
-                    $unfinalizeRequest = $row['Count(*)'];
-                }
-            }
-            else{
-                $unfinalizeRequest = 0;
-            }
-            $unfinalizeRequestPercent = $unfinalizeRequest/$onGoing;
-            $unfinalizeRequestPercent = round($unfinalizeRequestPercent*100,2).'%';
-
-            $sqlSubmitted = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'SubToUniFAST' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
+            // OVERALL (SUBMITTED)
+            $sqlSubmitted = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'SubToUniFAST' AND active_grantee = 'YES'";
             $resSubmitted = mysqli_query($connect, $sqlSubmitted);
             $checkSubmitted = mysqli_num_rows($resSubmitted);
             if($checkSubmitted > 0){
@@ -103,10 +66,11 @@
             else{
                 $submitted = 0;
             }
-            $submittedPercent = $submitted/$onGoing;
+            $submittedPercent = $submitted/$totalGrantees;
             $submittedPercent = round($submittedPercent*100,2).'%';
 
-            $sqlAppDAT = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'App-DAT' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
+            // OVERALL (EXPORTED)
+            $sqlAppDAT = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'App-DAT' AND active_grantee = 'YES'";
             $resAppDAT = mysqli_query($connect, $sqlAppDAT);
             $checkAppDAT = mysqli_num_rows($resAppDAT);
             if($checkAppDAT > 0){
@@ -117,10 +81,11 @@
             else{
                 $appDAT = 0;
             }
-            $appDATPercent = $appDAT/$onGoing;
+            $appDATPercent = $appDAT/$totalGrantees;
             $appDATPercent = round($appDATPercent*100,2).'%';
 
-            $sqlApproved = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Approved' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
+            // OVERALL (APPROVED)
+            $sqlApproved = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Approved' AND active_grantee = 'YES'";
             $resApproved = mysqli_query($connect, $sqlApproved);
             $checkApproved = mysqli_num_rows($resApproved);
             if($checkApproved > 0){
@@ -131,10 +96,11 @@
             else{
                 $approved = 0;
             }
-            $approvedPercent = $approved/$onGoing;
+            $approvedPercent = $approved/$totalGrantees;
             $approvedPercent = round($approvedPercent*100,2).'%';
             
-            $sqlRejected = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Rejected' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
+            // OVERALL (REJECTED)
+            $sqlRejected = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Rejected' AND active_grantee = 'YES'";
             $resRejected = mysqli_query($connect, $sqlRejected);
             $checkRejected = mysqli_num_rows($resRejected);
             if($checkRejected > 0){
@@ -145,38 +111,11 @@
             else{
                 $rejected = 0;
             }
-            $rejectedPercent = $rejected/$onGoing;
+            $rejectedPercent = $rejected/$totalGrantees;
             $rejectedPercent = round($rejectedPercent*100,2).'%';
 
-            $sqlForClaiming = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'For Claiming' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resForClaiming = mysqli_query($connect, $sqlForClaiming);
-            $checkForClaiming = mysqli_num_rows($resForClaiming);
-            if($checkForClaiming > 0){
-                while($row=mysqli_fetch_assoc($resForClaiming)){
-                    $forClaiming = $row['Count(*)'];
-                }
-            }
-            else{
-                $forClaiming = 0;
-            }
-            $forClaimingPercent = $forClaiming/$onGoing;
-            $forClaimingPercent = round($forClaimingPercent*100,2).'%';
-
-            $sqlClaimed = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Claimed' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resClaimed = mysqli_query($connect, $sqlClaimed);
-            $checkClaimed = mysqli_num_rows($resClaimed);
-            if($checkClaimed > 0){
-                while($row=mysqli_fetch_assoc($resClaimed)){
-                    $claimed = $row['Count(*)'];
-                }
-            }
-            else{
-                $claimed = 0;
-            }
-            $claimedPercent = $claimed/$onGoing;
-            $claimedPercent = round($claimedPercent*100,2).'%';
-
-            $sqlNotFinalized = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Not Finalized' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
+            // OVERALL (NOT FINALIZED)
+            $sqlNotFinalized = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Not Finalized' AND active_grantee = 'YES'";
             $resNotFinalized = mysqli_query($connect, $sqlNotFinalized);
             $checkNotFinalized = mysqli_num_rows($resNotFinalized);
             if($checkNotFinalized > 0){
@@ -187,200 +126,20 @@
             else{
                 $notFinalized = 0;
             }   
-            $notFinalizedPercent = $notFinalized/$onGoing;
+            $notFinalizedPercent = $notFinalized/$totalGrantees;
             $notFinalizedPercent = round($notFinalizedPercent*100,2).'%';
-            
-            
-            
-
-            /* ON GOING COUNTS ONLY for PROGRESS BAR ------------------------------------------------------- */
-
-            $sqlFinalizedOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Finalized' AND (tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resFinalizedOnGoing = mysqli_query($connect, $sqlFinalizedOnGoing);
-            $checkFinalizedOnGoing = mysqli_num_rows($resFinalizedOnGoing);
-            if($checkFinalizedOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resFinalizedOnGoing)){
-                    $finalizedOnGoing = $row['Count(*)'];
-                }
-            }
-            else{
-                $finalizedOnGoing = 0;
-            }
-            $finalizedOnGoingPercent = $finalizedOnGoing/$onGoingGrantees;
-            $finalizedOnGoingPercent = round($finalizedOnGoingPercent*100,2).'%';
-            
-            $sqlSubmittedOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'SubToUniFAST' AND (tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resSubmittedOnGoing = mysqli_query($connect, $sqlSubmittedOnGoing);
-            $checkSubmittedOnGoing = mysqli_num_rows($resSubmittedOnGoing);
-            if($checkSubmittedOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resSubmittedOnGoing)){
-                    $submittedOnGoing = $row['Count(*)'];
-                }
-            }
-            else{
-                $submittedOnGoing = 0;
-            }
-            $submittedOnGoingPercent = $submittedOnGoing/$onGoingGrantees;
-            $submittedOnGoingPercent = round($submittedOnGoingPercent*100,2).'%';
-
-            $sqlAppDATOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'App-DAT' AND (tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resAppDATOnGoing = mysqli_query($connect, $sqlAppDATOnGoing);
-            $checkAppDATOnGoing = mysqli_num_rows($resAppDATOnGoing);
-            if($checkAppDATOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resAppDATOnGoing)){
-                    $appDATOnGoing = $row['Count(*)'];
-                }
-            }
-            else{
-                $appDATOnGoing = 0;
-            }
-            $appDATOnGoingPercent = $appDATOnGoing/$onGoingGrantees;
-            $appDATOnGoingPercent = round($appDATOnGoingPercent*100,2).'%';
-
-            $sqlApprovedOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Approved' AND (tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resApprovedOnGoing = mysqli_query($connect, $sqlApprovedOnGoing);
-            $checkApprovedOnGoing = mysqli_num_rows($resApprovedOnGoing);
-            if($checkApprovedOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resApprovedOnGoing)){
-                    $approvedOnGoing = $row['Count(*)'];
-                }
-            }
-            else{
-                $approvedOnGoing = 0;
-            }
-            $approvedOnGoingPercent = $approvedOnGoing/$onGoingGrantees;
-            $approvedOnGoingPercent = round($approvedOnGoingPercent*100,2).'%';
-            
-            $sqlRejectedOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Rejected' AND (tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resRejectedOnGoing = mysqli_query($connect, $sqlRejectedOnGoing);
-            $checkRejectedOnGoing = mysqli_num_rows($resRejectedOnGoing);
-            if($checkRejectedOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resRejectedOnGoing)){
-                    $rejectedOnGoing = $row['Count(*)'];
-                }
-            }
-            else{
-                $rejectedOnGoing = 0;
-            }
-            $rejectedOnGoingPercent = $rejectedOnGoing/$onGoingGrantees;
-            $rejectedOnGoingPercent = round($rejectedOnGoingPercent*100,2).'%';
-
-            $sqlNotFinalizedOnGoing = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Not Finalized' AND (tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resNotFinalizedOnGoing = mysqli_query($connect, $sqlNotFinalizedOnGoing);
-            $checkNotFinalizedOnGoing = mysqli_num_rows($resNotFinalizedOnGoing);
-            if($checkNotFinalizedOnGoing > 0){
-                while($row=mysqli_fetch_assoc($resNotFinalizedOnGoing)){
-                    $notFinalizedOnGoing = $row['Count(*)'];
-                }
-            }
-            else{
-                $notFinalizedOnGoing = 0;
-            }
-            $notFinalizedOnGoingPercent = $notFinalizedOnGoing/$onGoingGrantees;
-            $notFinalizedOnGoingPercent = round($notFinalizedOnGoingPercent*100,2).'%';
 
 
-            $overAllOnGoingFinalized = $finalizedOnGoing + $submittedOnGoing + $appDATOnGoing + $approvedOnGoing + $rejectedOnGoing;
-            $overAllOnGoingFinalizedPercentage = $overAllOnGoingFinalized/$onGoingGrantees;
-            $overAllOnGoingFinalizedPercentage = round($overAllOnGoingFinalizedPercentage*100,2);
 
-            $overAllOnGoingFinalizedDifference = $onGoingGrantees - $overAllOnGoingFinalized;
-            $overAllOnGoingFinalizedPercentageDifference = 100 - $overAllOnGoingFinalizedPercentage;
-            
 
-             /* NEW GRANTEE COUNTS ONLY for PROGRESS BAR ------------------------------------------------------- */
+            //FOR PROGRESS BAR
+            $overAllFinalized = $finalized + $submitted + $appDAT + $approved + $rejected;
+            $overAllFinalizedPercentage = $overAllFinalized/$totalGrantees;
+            $overAllFinalizedPercentage = round($overAllFinalizedPercentage*100,2);
 
-             $sqlFinalizedNew = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Finalized' AND (tag = 'NEW' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-             $resFinalizedNew = mysqli_query($connect, $sqlFinalizedNew);
-             $checkFinalizedNew = mysqli_num_rows($resFinalizedNew);
-             if($checkFinalizedNew > 0){
-                 while($row=mysqli_fetch_assoc($resFinalizedNew)){
-                     $finalizedNew = $row['Count(*)'];
-                 }
-             }
-             else{
-                 $finalizedNew = 0;
-             }
-             $finalizedNewPercent = $finalizedNew/$newGrantees;
-             $finalizedNewPercent = round($finalizedNewPercent*100,2).'%';
-            
-            $sqlSubmittedNew = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'SubToUniFAST' AND (tag = 'NEW' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-            $resSubmittedNew = mysqli_query($connect, $sqlSubmittedNew);
-            $checkSubmittedNew = mysqli_num_rows($resSubmittedNew);
-            if($checkSubmittedNew > 0){
-                while($row=mysqli_fetch_assoc($resSubmittedNew)){
-                    $submittedNew = $row['Count(*)'];
-                }
-            }
-            else{
-                $submittedNew = 0;
-            }
-            $submittedNewPercent = $submittedNew/$newGrantees;
-            $submittedNewPercent = round($submittedNewPercent*100,2).'%';
-  
-             $sqlAppDATNew = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'App-DAT' AND (tag = 'NEW' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-             $resAppDATNew = mysqli_query($connect, $sqlAppDATNew);
-             $checkAppDATNew = mysqli_num_rows($resAppDATNew);
-             if($checkAppDATNew > 0){
-                 while($row=mysqli_fetch_assoc($resAppDATNew)){
-                     $appDATNew = $row['Count(*)'];
-                 }
-             }
-             else{
-                 $appDATNew = 0;
-             }
-             $appDATNewPercent = $appDATNew/$newGrantees;
-             $appDATNewPercent = round($appDATNewPercent*100,2).'%';
- 
-             $sqlApprovedNew = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Approved' AND (tag = 'NEW' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-             $resApprovedNew = mysqli_query($connect, $sqlApprovedNew);
-             $checkApprovedNew = mysqli_num_rows($resApprovedNew);
-             if($checkApprovedNew > 0){
-                 while($row=mysqli_fetch_assoc($resApprovedNew)){
-                     $approvedNew = $row['Count(*)'];
-                 }
-             }
-             else{
-                 $approvedNew = 0;
-             }
-             $approvedNewPercent = $approvedNew/$newGrantees;
-             $approvedNewPercent = round($approvedNewPercent*100,2).'%';
-             
-             $sqlRejectedNew = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Rejected' AND (tag = 'NEW' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-             $resRejectedNew = mysqli_query($connect, $sqlRejectedNew);
-             $checkRejectedNew = mysqli_num_rows($resRejectedNew);
-             if($checkRejectedNew > 0){
-                 while($row=mysqli_fetch_assoc($resRejectedNew)){
-                     $rejectedNew = $row['Count(*)'];
-                 }
-             }
-             else{
-                 $rejectedNew = 0;
-             }
-             $rejectedNewPercent = $rejectedNew/$newGrantees;
-             $rejectedNewPercent = round($rejectedNewPercent*100,2).'%';
- 
-             $sqlNotFinalizedNew = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Not Finalized' AND (tag = 'NEW' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN')";
-             $resNotFinalizedNew = mysqli_query($connect, $sqlNotFinalizedNew);
-             $checkNotFinalizedNew = mysqli_num_rows($resNotFinalizedNew);
-             if($checkNotFinalizedNew > 0){
-                 while($row=mysqli_fetch_assoc($resNotFinalizedNew)){
-                     $notFinalizedNew = $row['Count(*)'];
-                 }
-             }
-             else{
-                 $notFinalizedNew = 0;
-             }
-             $notFinalizedNewPercent = $notFinalizedNew/$newGrantees;
-             $notFinalizedNewPercent = round($notFinalizedNewPercent*100,2).'%';
- 
- 
-             $overAllNewFinalized = $finalizedNew + $submittedNew + $appDATNew + $approvedNew + $rejectedNew;
-             $overAllNewFinalizedPercentage = $overAllNewFinalized/$newGrantees;
-             $overAllNewFinalizedPercentage = round($overAllNewFinalizedPercentage*100,2);
- 
-             $overAllNewFinalizedDifference = $newGrantees - $overAllNewFinalized;
-             $overAllNewFinalizedPercentageDifference = 100 - $overAllNewFinalizedPercentage;
+            $overAllFinalizedDifference = $totalGrantees - $overAllFinalized;
+            $overAllFinalizedPercentageDifference = 100 - $overAllFinalizedPercentage;
+
         ?>
             <div class="row" style = "margin-bottom:30px;">
                 <div class="col">
@@ -393,46 +152,19 @@
             
             <div class="row">
                 <div class="col-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="progress" style="height:60px;width:100%;text-align:center;padding:8px;">
-                                <h3 style=""><?php echo $overAllNewFinalizedPercentage; ?><span style="font-size:13px;">%</span></h3><br>
-                                <p> of New Grantees</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="col-10">
-                    <div class="progress" style="height:60px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="text-align:center;width: <?php echo $overAllNewFinalizedPercentage; ?>%;height:100%" aria-valuenow="<?php echo $overAllNewFinalized; ?>" aria-valuemin="0" aria-valuemax="<?php echo $onGoing; ?>">
-                            <p style="margin-bottom:0px;margin-top:10px;font-size:18px;"><b><?php echo number_format($overAllNewFinalized); ?></b></p>
-                            <p>Total Applications Received</p>
-                        </div>
-                        <div class="progress-bar" role="progressbar" style="background-color:#ccc;text-align:center;width: <?php echo $overAllNewFinalizedPercentageDifference; ?>%;height:100%" aria-valuenow="<?php echo $overAllNewFinalizedDifference; ?>" aria-valuemin="0" aria-valuemax="<?php echo $onGoing; ?>">
-                            <p style="color:#555;margin-bottom:0px;margin-top:10px;font-size:18px;"><b><?php echo number_format($overAllNewFinalizedDifference); ?></b></p>
-                            <p style="color:#555;">Applications Not Yet Submitted</p>
-                        </div>
-                    </div>
-                </div>
-            </div><br>
-
-            
-            <div class="row">
-                <div class="col-2">
                     <div class="progress" style="height:60px;width:100%;text-align:center;padding:8px;">
-                        <h3 style=""><?php echo $overAllOnGoingFinalizedPercentage; ?><span style="font-size:13px;">%</span></h3><br>
-                        <p> of Continuing Grantees</p>
+                        <h3 style=""><?php echo $overAllFinalizedPercentage; ?><span style="font-size:13px;">%</span></h3><br>
+                        <p> of Total Grantees</p>
                     </div>
                 </div>
                 <div class="col-10">
                     <div class="progress" style="height:60px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="text-align:center;width: <?php echo $overAllOnGoingFinalizedPercentage; ?>%;height:100%" aria-valuenow="<?php echo $overAllOnGoingFinalized; ?>" aria-valuemin="0" aria-valuemax="<?php echo $onGoing; ?>">
-                            <p style="margin-bottom:0px;margin-top:10px;font-size:18px;"><b><?php echo number_format($overAllOnGoingFinalized); ?></b></p>
+                        <div class="progress-bar bg-success" role="progressbar" style="text-align:center;width: <?php echo $overAllFinalizedPercentage; ?>%;height:100%" aria-valuenow="<?php echo $overAllFinalized; ?>" aria-valuemin="0" aria-valuemax="<?php echo $totalGrantees; ?>">
+                            <p style="margin-bottom:0px;margin-top:10px;font-size:18px;"><b><?php echo number_format($overAllFinalized); ?></b></p>
                             <p>Total Applications Received</p>
                         </div>
-                        <div class="progress-bar" role="progressbar" style="background-color:#ccc;text-align:center;width: <?php echo $overAllOnGoingFinalizedPercentageDifference; ?>%;height:100%" aria-valuenow="<?php echo $overAllOnGoingFinalizedDifference; ?>" aria-valuemin="0" aria-valuemax="<?php echo $onGoing; ?>">
-                            <p style="color:#555;margin-bottom:0px;margin-top:10px;font-size:18px;"><b><?php echo number_format($overAllOnGoingFinalizedDifference); ?></b></p>
+                        <div class="progress-bar" role="progressbar" style="background-color:#ccc;text-align:center;width: <?php echo $overAllFinalizedPercentageDifference; ?>%;height:100%" aria-valuenow="<?php echo $overAllFinalizedDifference; ?>" aria-valuemin="0" aria-valuemax="<?php echo $totalGrantees; ?>">
+                            <p style="color:#555;margin-bottom:0px;margin-top:10px;font-size:18px;"><b><?php echo number_format($overAllFinalizedDifference); ?></b></p>
                             <p style="color:#555;">Applications Not Yet Submitted</p>
                         </div>
                     </div>
@@ -507,8 +239,8 @@
                         <div class="card-body" style="background-color:#DDDDDD">
                             <h5 class="card-title" style="font-family:sans-serif;color:#666;"><b>Total Target</b></h5>
                             <hr>
-                            <div class="row"><div class="card-text col-lg-6 col-md-6" style="margin-bottom:-20px;text-align:center;display:inline-block;margin-top:-10px;"><?php echo ' <span style="font-size:12px;color:#666;font-family:sans-serif;">New</span><br><b style="font-size:15px;font-family:sans-serif;color:#666;">'.number_format($newGrantees).'</b>'; ?></div><div class="card-text col-lg-6 col-md-6" style="margin-bottom:-20px;text-align:center;display:inline-block;margin-top:-10px;"><?php echo ' <span style="font-size:12px;color:#666;font-family:sans-serif;">Continuing</span><br><b style="font-size:15px;font-family:sans-serif;color:#666;">'.number_format($onGoingGrantees).'</b>'; ?></div></div><br>
-                            <div class="card-text" style="margin-bottom:-25px;text-align:center;"><?php echo '<b style="font-size:24px;font-family:sans-serif;color:#444;">'.number_format($onGoing).'</b> <span style="font-size:12px;color:#666;font-family:sans-serif;">Grantees</span>'; ?></div>
+                            <div class="row"><div class="card-text col-lg-6 col-md-6" style="margin-bottom:-20px;text-align:center;display:inline-block;margin-top:-10px;"><?php echo ' <span style="font-size:12px;color:#666;font-family:sans-serif;"></span><br><b style="font-size:15px;font-family:sans-serif;color:#666;"></b>'; ?></div><div class="card-text col-lg-6 col-md-6" style="margin-bottom:-20px;text-align:center;display:inline-block;margin-top:-10px;"><?php echo ' <span style="font-size:12px;color:#666;font-family:sans-serif;"></span><br><b style="font-size:15px;font-family:sans-serif;color:#666;"></b>'; ?></div></div><br>
+                            <div class="card-text" style="margin-bottom:-25px;text-align:center;"><?php echo '<b style="font-size:24px;font-family:sans-serif;color:#444;">'.number_format($totalGrantees).'</b> <span style="font-size:12px;color:#666;font-family:sans-serif;">Grantees</span>'; ?></div>
                             <br>
                         </div>
                     </div>
@@ -634,7 +366,7 @@
 
         //STATUS PER REGION        
         <?php
-            //$sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(lbp.app_id) AS OG_GRANTEES, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN') GROUP BY hei.hei_psg_region";
+            //$sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(lbp.app_id) AS OG_GRANTEES, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND active_grantee = 'YES' GROUP BY hei.hei_psg_region";
             // $sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN') GROUP BY hei.hei_psg_region";
             // $resStatusPerRegion = mysqli_query($connect, $sqlStatusPerRegion);
             // $checkStatusPerRegion = mysqli_num_rows($resStatusPerRegion);
@@ -655,7 +387,7 @@
 
         <?php
             //$sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(lbp.app_id) AS OG_GRANTEES, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN') GROUP BY hei.hei_psg_region";
-            $sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='SubToUniFAST' THEN lbp.app_id END) AS SUBMITTED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN') GROUP BY hei.hei_psg_region";
+            $sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='SubToUniFAST' THEN lbp.app_id END) AS SUBMITTED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND active_grantee = 'YES' GROUP BY hei.hei_psg_region";
             $resStatusPerRegion = mysqli_query($connect, $sqlStatusPerRegion);
             $checkStatusPerRegion = mysqli_num_rows($resStatusPerRegion);
             if($checkStatusPerRegion > 0){
