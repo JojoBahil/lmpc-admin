@@ -87,6 +87,7 @@
                 $transaction_datfile_export_date = $row["transaction_datfile_export_date"];
                 $status = $row["status"];
                 $def_password = $row["def_password"];
+                $active_grantee = $row["active_grantee"];
 
                 if(!empty($pdf_attachment) && empty($wallet_number) && empty($device_number) && empty($transaction_datfile_export_date)){
                     $disable = '';
@@ -336,10 +337,10 @@
                                 <label>'.$hei_name.'</label>
                             </td>
                             <td style="vertical-align:middle;background-color:#aaa;border-color:#414141;">
-                                <label><b>Academic Year:</b></label>
+                                <label><b>Validated:</b></label>
                             </td>
                             <td style="vertical-align:middle;background-color:rgba(255,255,255,0.9);border-color:#414141;">
-                                <label>'.$ac_year.'</label>
+                                <label>'.$active_grantee.'</label>
                             </td>
                         </tr>
 
