@@ -5,7 +5,7 @@
 
   .login-clean {
     width: 100%;
-    background-image: url("../../image/background2.png");
+    background-image: url("../../image/background2.webp");
     padding:120px 0;
     background-position:center;
     background-attachment: fixed; 
@@ -34,7 +34,7 @@
     padding:0 0 20px;
     font-size:100px;
     color:rgb(244,71,107);
-    background-image:url("../../image/navigation-logo-admin.png");
+    background-image:url("../../image/navigation-logo-admin.webp");
     background-position:center;
     height:260px;
     background-size:410px;
