@@ -126,7 +126,10 @@ if(isset($_POST['btn_update_reject_records_01032022'])){
         $file_array = explode(".", $_FILES['file_application_rejected_report_01032022']['name']);
         $file_extension = end($file_array);
 
+        $message = '';
         $updated_rows = 0;
+        $skipped_rows = 0;
+        $skipped_award_no = array();
 
         if(in_array($file_extension, $allowed_extension)){
             $reader = IOFactory::createReader('Xlsx');
@@ -146,7 +149,7 @@ if(isset($_POST['btn_update_reject_records_01032022'])){
                 // $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Rejected', application_datfile_export_date = NULL, application_datfile_name = NULL, application_datfile_batch = NULL, application_datfile_sequence = NULL, remarks = 'Your application was Rejected due to invalid inputs, please check carefully your inputs and re-finalize your application' WHERE award_no = '$tes_award_number' AND status = 'App-DAT' AND wallet_number IS NULL AND device_number IS NULL";
                 
                 // REVERT FROM App-DAT INTO SubToUniFAST FOR RE EXPORTING
-                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET application_datfile_export_date = NULL, application_datfile_name = NULL, application_datfile_batch = NULL, application_datfile_sequence = NULL, status = 'SubToUniFAST' WHERE status = 'App-DAT' AND award_no = '$tes_award_number';";
+                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET application_datfile_export_date = NULL, application_datfile_name = NULL, application_datfile_batch = NULL, application_datfile_sequence = NULL, status = 'SubToUniFAST' WHERE status = 'App-DAT' AND status != 'Approved' AND award_no = '$tes_award_number' AND (wallet_number IS NULL OR wallet_number = '') AND (device_number IS NULL OR device_number = '');";
                 mysqli_query($connect, $sqlUpdateDetails);
 
                 if(mysqli_affected_rows($connect) >= 1){
@@ -154,6 +157,8 @@ if(isset($_POST['btn_update_reject_records_01032022'])){
                 }
                 else{
                     $updated_rows = $updated_rows;
+                    $skipped_award_no[$skipped_rows] = $row[1];
+                    $skipped_rows++;
                 }  
             }
 
@@ -162,7 +167,10 @@ if(isset($_POST['btn_update_reject_records_01032022'])){
                 header('location:../listofgrantees.php?errmsg='.$message);
             }
             else{
-                $message = 'Succesfully updated '.$updated_rows.' grantee/s';
+                $message .= 'Succesfully updated '.$updated_rows.' grantee/s while the following award numbers was not updated due to some error';
+                foreach($skipped_award_no as $skipped){
+                    $message .= $skipped.'<br>';
+                }
                 header('location:../listofgrantees.php?sucmsg='.$message);
             }            
         }
