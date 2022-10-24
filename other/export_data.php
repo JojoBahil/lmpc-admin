@@ -1570,13 +1570,29 @@ if(isset($_POST['btn_generate_datfile'])){
 
     if(!empty($_POST['sel_reexport'])){
         $sql = "SELECT *
-        FROM tbl_lbp_form a INNER JOIN tbl_lbp_servicing_branches b ON a.hei_uii = b.hei_uii
+        FROM tbl_lbp_form a 
+        INNER JOIN tbl_lbp_servicing_branches b ON a.hei_uii = b.hei_uii
         WHERE 
         application_datfile_name = '".$_POST['sel_reexport']."'";
     }
     else{
-        $sql = "SELECT DISTINCT(a.award_no), a.uid, a.app_id, a.hei_uii, a.fname, a.mname, a.lname, a.birthdate, a.birth_place, a.m_fname, a.m_mname, a.m_lname, a.nationality, a.sex, a.title, a.marital_status, a.permanent_street, a.permanent_barangay, a.permanent_city, a.permanent_province, a.permanent_zip, a.present_street, a.present_barangay, a.present_city, a.present_province, a.present_zip, a.contact, a.email, a.lbp_branch_region, a.lbp_branch_code, a.lbp_branch, a.id_number, a.id_expire_date, a.id_type, a.emboss_name, a.profession, a.source_of_fund_id, a.gross_salary_id, a.tin, a.def_password, a.password, a.date_exported, a.photo, a.id_front_photo, a.id_back_photo, a.pdf_attachment, a.privacy_agreement, a.editable_fields, a.pickup_at_hei, a.application_datfile_export_date, a.application_datfile_name, a.application_datfile_batch, a.application_datfile_sequence, a.wallet_number, a.device_number, a.transaction_datfile_export_date, a.status, a.remarks, a.tag, b.uid, b.region, b.hei_name, b.branch_code, b.branch FROM tbl_lbp_form a INNER JOIN tbl_lbp_servicing_branches b ON a.hei_uii = b.hei_uii WHERE b.hei_uii IS NOT NULL AND b.hei_uii != '' AND a.status = 'SubToUniFAST' AND a.date_exported != '' AND (a.application_datfile_export_date IS NULL OR a.application_datfile_export_date != '') AND a.tag IS NOT NULL AND a.tag != 'DUPLICATE' AND a.active_grantee = 'YES' AND a.lbp_branch_code IS NOT NULL
-        AND wallet_number IS NOT NULL AND device_number IS NOT NULL ORDER BY b.hei_uii LIMIT 500";
+        $sql = "SELECT DISTINCT(a.award_no), a.uid, a.app_id, a.hei_uii, a.fname, a.mname, a.lname, a.birthdate, a.birth_place, a.m_fname, a.m_mname, a.m_lname, a.nationality, a.sex, a.title, a.marital_status, a.permanent_street, a.permanent_barangay, a.permanent_city, a.permanent_province, a.permanent_zip, a.present_street, a.present_barangay, a.present_city, a.present_province, a.present_zip, a.contact, a.email, a.lbp_branch_region, a.lbp_branch_code, a.lbp_branch, a.id_number, a.id_expire_date, a.id_type, a.emboss_name, a.profession, a.source_of_fund_id, a.gross_salary_id, a.tin, a.def_password, a.password, a.date_exported, a.photo, a.id_front_photo, a.id_back_photo, a.pdf_attachment, a.privacy_agreement, a.editable_fields, a.pickup_at_hei, a.application_datfile_export_date, a.application_datfile_name, a.application_datfile_batch, a.application_datfile_sequence, a.wallet_number, a.device_number, a.transaction_datfile_export_date, a.status, a.remarks, a.tag, b.uid, b.region, b.hei_name, b.branch_code, b.branch 
+        FROM tbl_lbp_form a 
+        INNER JOIN tbl_lbp_servicing_branches b ON a.hei_uii = b.hei_uii 
+        INNER JOIN tbl_tes_app_2022_2023 c ON c.app_id=a.app_id 
+        WHERE b.hei_uii IS NOT NULL 
+        AND b.hei_uii != '' 
+        AND a.status = 'SubToUniFAST' 
+        AND a.date_exported != '' 
+        AND (a.application_datfile_export_date IS NULL OR a.application_datfile_export_date != '') 
+        AND a.tag IS NOT NULL 
+        AND a.tag != 'DUPLICATE' 
+        AND a.active_grantee = 'YES' 
+        AND a.lbp_branch_code IS NOT NULL
+        AND c.yearlevel != '4'
+        AND wallet_number IS NULL 
+        AND device_number IS NULL 
+        ORDER BY b.hei_uii LIMIT 500";
     }
             
     $result = mysqli_query($connect, $sql);
