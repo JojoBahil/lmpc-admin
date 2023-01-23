@@ -10,7 +10,7 @@
                 <th width="15%">Last Name</th>
                 <th width="15%">First Name</th>
                 <th width="15%">Middle Name</th>
-                <th width="10%">Sex</th>
+                <th width="10%">Active Grantee</th>
                 <th width="10%">Status</th>
                 <th width="15%">Actions</th> 
             </tr>  
@@ -36,6 +36,7 @@
                         $device_number = mysqli_real_escape_string($connect, $row['device_number']);
                         $transaction_datfile_export_date = mysqli_real_escape_string($connect, $row['transaction_datfile_export_date']);
                         $status = mysqli_real_escape_string($connect, $row['status']);
+                        $active_grantee = mysqli_real_escape_string($connect, $row['active_grantee']);
 
                         if(!empty($pdf_attachment) && !empty($date_exported) && empty($wallet_number) && empty($device_number) && empty($transaction_datfile_export_date)){
                             $disable = '';
@@ -56,7 +57,7 @@
                                 <td>$lastname</td>
                                 <td>$firstname</td>
                                 <td>$middlename</td>
-                                <td>$sex</td>
+                                <td>$active_grantee</td>
                                 <td>$status</td>
                                 <td style='text-align:center;'>$action</td>
                             </tr>
