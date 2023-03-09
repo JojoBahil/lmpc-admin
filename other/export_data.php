@@ -1583,6 +1583,8 @@ if(isset($_POST['btn_generate_datfile'])){
         WHERE b.hei_uii IS NOT NULL 
         AND b.hei_uii != '' 
         AND a.status = 'SubToUniFAST' 
+        AND a.status != 'Approved' 
+        AND a.status != 'Claimed' 
         AND a.date_exported != '' 
         AND (a.application_datfile_export_date IS NULL OR a.application_datfile_export_date != '') 
         AND a.tag IS NOT NULL 
@@ -2225,4 +2227,3 @@ if(isset($_POST['btn_generate_datfile'])){
             header('location:../attachments.php?errmsg='.$message);
         }
     }
-?>
