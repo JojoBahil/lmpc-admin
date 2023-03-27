@@ -298,7 +298,7 @@ if(isset($_POST['btn_update_for_claiming'])){
     }
 }
 
-// UPDATE STATUS TO CLAIMED
+// UPDATE STATUS TO CLAIMED ---------------- for code updating -----------------------
 if(isset($_POST['btn_claim_update'])){
     if($_FILES['file_claim_update']['name'] != ''){
         $allowed_extension = array('xls','csv','xlsx');
@@ -313,12 +313,12 @@ if(isset($_POST['btn_claim_update'])){
 
             $spreadsheet = $reader->load($_FILES['file_claim_update']['tmp_name']);
             $data = $spreadsheet->getActivesheet()->toArray();
+
+            $skipped_device_number = array();
+
             foreach($data as $row){
                 $insert_data = array(
-                    'account_number' => $row[0],
-                    'account_name' => $row[1],
-                    'device_number' => $row[2],
-                    'hei_name' => $row[3]
+                    'device_number' => $row[2]
                 );
 
                 extract($insert_data);   
@@ -333,6 +333,7 @@ if(isset($_POST['btn_claim_update'])){
                 }
                 else{
                     $updated_rows = $updated_rows;
+                    array_push($skipped_device_number,$device_number);
                 }  
             }
 
@@ -341,8 +342,16 @@ if(isset($_POST['btn_claim_update'])){
                 header('location:../listofgrantees.php?errmsg='.$message);
             }
             else{
-                $message = 'Succesfully updated '.$updated_rows.' grantee/s';
-                header('location:../listofgrantees.php?sucmsg='.$message);
+                if(empty($skipped_device_number)){
+                    $message = 'Succesfully updated '.$updated_rows.' grantee/s';
+                }
+                else{
+                    $message .= 'Succesfully updated '.$updated_rows.' grantee/s. However, the following device number listed below were not updated due to some reasons.';
+                    foreach($skipped_device_number as $s){
+                        $message .= "<br>".$s;
+                    }
+                }   
+                header('location:../listofgrantees.php?sucmsg='.$message);                            
             }            
         }
         else{
