@@ -20,7 +20,7 @@
         <link rel="stylesheet" href="assets/css/navigation.css">
     </head>
     <body style="background-image:url('image/background2.png');background-attachment: fixed; background-position: center;">
-        <div class="container" style="background-color:rgba(255,255,255,0.9);margin-top:20px;border-radius:3px;">
+        <div class="container" style="background-color:rgba(255,255,255,0.9);margin-top:20px;border-radius:3px;padding-bottom:20px;margin-bottom:70px;">
         <h4 style="margin-bottom:10px;padding-top:10px;font-family:helvetica;color:#444;">Dashboard</h4>
         <?php    
 
