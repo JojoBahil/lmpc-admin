@@ -325,7 +325,7 @@ if(isset($_POST['btn_claim_update'])){
                 // var_dump($insert_data)  ;     
                 // echo '<br>'.$tes_award_number;       
 
-                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Claimed' WHERE device_number = '$device_number'";
+                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Claimed' WHERE device_number = '$device_number' AND status = 'Approved' AND wallet_number IS NOT NULL AND device_number IS NOT NULL";
                 mysqli_query($connect, $sqlUpdateDetails);
 
                 if(mysqli_affected_rows($connect) >= 1){
