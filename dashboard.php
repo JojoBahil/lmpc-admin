@@ -129,11 +129,26 @@
             $notFinalizedPercent = $notFinalized/$totalGrantees;
             $notFinalizedPercent = round($notFinalizedPercent*100,2).'%';
 
+            // OVERALL (CLAIMED)
+            $sqlClaimed = "SELECT Count(*) FROM tbl_lbp_form WHERE status = 'Claimed' AND active_grantee = 'YES'";
+            $resClaimed = mysqli_query($connect, $sqlClaimed);
+            $checkClaimed = mysqli_num_rows($resClaimed);
+            if($checkClaimed > 0){
+                while($row=mysqli_fetch_assoc($resClaimed)){
+                    $claimed = $row['Count(*)'];
+                }
+            }
+            else{
+                $claimed = 0;
+            }   
+            $claimedPercent = $claimed/$totalGrantees;
+            $claimedPercent = round($claimedPercent*100,2).'%';
+
 
 
 
             //FOR PROGRESS BAR
-            $overAllFinalized = $finalized + $submitted + $appDAT + $approved + $rejected;
+            $overAllFinalized = $finalized + $submitted + $appDAT + $approved + $rejected + $claimed;
             $overAllFinalizedPercentage = $overAllFinalized/$totalGrantees;
             $overAllFinalizedPercentage = round($overAllFinalizedPercentage*100,2);
 
@@ -234,6 +249,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" style="margin-bottom:10px;">
+                    <div class="card" style="border-color:#b79ff1;">
+                        <div class="card-body" style="background-color:#b79ff188">
+                            <h5 class="card-title" style="font-family:sans-serif;color:#666;"><b>Claimed</b></h5>
+                            <hr>
+                            <div class="card-text" style="margin-bottom:8px;"><?php echo '<b style="font-size:20px;font-family:sans-serif;color:#555;">'.number_format($claimed).'</b> <span style="font-size:12px;color:#666;font-family:Bahnschrift;">Applications</span>'; ?></div>
+                            <div class="card-text"><?php echo '<b style="font-size:20px;font-family:sans-serif;color:#555;">'.$claimedPercent.'</b> <span style="font-size:12px;color:#666;font-family:Bahnschrift;">of Total Target</span>'; ?></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" style="margin-bottom:5px;">
                     <div class="card" style="border-color:#CCCCCC;">
                         <div class="card-body" style="background-color:#DDDDDD">
@@ -250,17 +277,17 @@
             
             <div class="row">
                 <!-- OVERALL STATUS -->
-                <div class="col-xl-2" style="margin-top:20px;">
+                <div class="col-xl-1" style="margin-top:20px;">
                 
                 </div>
-                <div class="col-xl-8" style="margin-top:20px;">
+                <div class="col-xl-10" style="margin-top:20px;">
                     <div class="card">
                         <div class="card-body">
-                            <canvas id="myChart" width="3" height="2"></canvas>
+                            <canvas id="myChart" width="4" height="3"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-2" style="margin-top:20px;">
+                <div class="col-xl-1" style="margin-top:20px;">
                     
                 </div>
 
@@ -300,17 +327,18 @@
         var myChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Not Finalized', 'Finalized', 'Submitted', 'Exported', 'Approved', 'Rejected'],
+                labels: ['Not Finalized', 'Finalized', 'Submitted', 'Exported', 'Approved', 'Rejected', 'Claimed'],
                 datasets: [{
                     label: 'Number of Students',
-                    data: [<?php echo $notFinalized; ?>, <?php echo $finalized; ?>, <?php echo $submitted; ?>, <?php echo $appDAT; ?>, <?php echo $approved; ?>, <?php echo $rejected; ?>],
+                    data: [<?php echo $notFinalized; ?>, <?php echo $finalized; ?>, <?php echo $submitted; ?>, <?php echo $appDAT; ?>, <?php echo $approved; ?>, <?php echo $rejected; ?>, <?php echo $claimed; ?>],
                     backgroundColor: [
                         '#FFE5B4',
                         '#9EE09E',
                         '#40cfb2',
                         '#9EC1CF',                        
                         '#FDFD97',
-                        '#FF6663'
+                        '#FF6663',
+                        '#B79FF1'
                     ],
                     borderColor: [
                         '#FFE5B4',
@@ -318,7 +346,8 @@
                         '#40cfb2',
                         '#9EC1CF',                        
                         '#FDFD97',
-                        '#FF6663'
+                        '#FF6663',
+                        '#B79FF1'
                     ],
                     borderWidth: 1
                 }]
@@ -387,7 +416,7 @@
 
         <?php
             //$sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(lbp.app_id) AS OG_GRANTEES, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND (tag = 'NEW' OR tag = 'ON-GOING' OR tag = 'AWARDED THROUGH RESIDENCY' OR tag = 'EXTENDED OJT DUE TO PANDEMIC' OR tag = 'ON-GOING LISTAHANAN') GROUP BY hei.hei_psg_region";
-            $sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='SubToUniFAST' THEN lbp.app_id END) AS SUBMITTED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND active_grantee = 'YES' GROUP BY hei.hei_psg_region";
+            $sqlStatusPerRegion = "SELECT hei.hei_psg_region, COUNT(CASE WHEN lbp.status='Not Finalized' THEN lbp.app_id END) AS NOT_FINALIZED, COUNT(CASE WHEN lbp.status='SubToUniFAST' THEN lbp.app_id END) AS SUBMITTED, COUNT(CASE WHEN lbp.status='Finalized' THEN lbp.app_id END) AS FINALIZED, COUNT(CASE WHEN lbp.status='App-DAT' THEN lbp.app_id END) AS EXPORTED, COUNT(CASE WHEN lbp.status='Approved' THEN lbp.app_id END) AS APPROVED, COUNT(CASE WHEN lbp.status='Rejected' THEN lbp.app_id END) AS REJECTED, COUNT(CASE WHEN lbp.status='Claimed' THEN lbp.app_id END) AS CLAIMED FROM tbl_lbp_form lbp INNER JOIN tbl_heis hei ON hei.hei_uii=lbp.hei_uii WHERE status != 'WAIVED/DELISTED' AND active_grantee = 'YES' GROUP BY hei.hei_psg_region";
             $resStatusPerRegion = mysqli_query($connect, $sqlStatusPerRegion);
             $checkStatusPerRegion = mysqli_num_rows($resStatusPerRegion);
             if($checkStatusPerRegion > 0){
@@ -401,6 +430,7 @@
                     $statusPerRegion[$row_number][4] = $row['EXPORTED'];
                     $statusPerRegion[$row_number][5] = $row['APPROVED'];
                     $statusPerRegion[$row_number][6] = $row['REJECTED'];
+                    $statusPerRegion[$row_number][7] = $row['CLAIMED'];
                     $row_number++;
                  }
             }
@@ -448,6 +478,12 @@
                     label: "Rejected",
                     borderColor:"#FF6663",
                     backgroundColor:"#FF6663",
+                    fill:false
+                },{
+                    data:[<?php echo $statusPerRegion[0][7]; ?>, <?php echo $statusPerRegion[1][7]; ?>, <?php echo $statusPerRegion[2][7]; ?>, <?php echo $statusPerRegion[3][7]; ?>, <?php echo $statusPerRegion[4][7]; ?>, <?php echo $statusPerRegion[5][7]; ?>, <?php echo $statusPerRegion[6][7]; ?>, <?php echo $statusPerRegion[7][7]; ?>, <?php echo $statusPerRegion[8][7]; ?>, <?php echo $statusPerRegion[9][7]; ?>, <?php echo $statusPerRegion[10][7]; ?>, <?php echo $statusPerRegion[11][7]; ?>, <?php echo $statusPerRegion[12][7]; ?>, <?php echo $statusPerRegion[13][7]; ?>, <?php echo $statusPerRegion[14][7]; ?>, <?php echo $statusPerRegion[15][7]; ?>, <?php echo $statusPerRegion[16][7]; ?>, <?php echo $statusPerRegion[17][7]; ?>],
+                    label: "Claimed",
+                    borderColor:"#B79FF1",
+                    backgroundColor:"#B79FF1",
                     fill:false
                 }]
             },

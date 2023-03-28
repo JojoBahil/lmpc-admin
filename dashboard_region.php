@@ -25,7 +25,7 @@
         </script>
     </head>
     <body style="background-image:url('image/background2.png');background-attachment: fixed; background-position: center;">
-        <div class="container" style="background-color:rgba(255,255,255,0.9);margin-top:20px;border-radius:3px;">
+        <div class="container" style="background-color:rgba(255,255,255,0.9);margin-top:20px;border-radius:3px;padding-bottom:20px;margin-bottom:70px;">
         <h4 style="margin-bottom:30px;padding-top:10px;font-family:helvetica;color:#444;">Dashboard</h4>
             
         <?php    
@@ -195,9 +195,24 @@
             $notFinalizedPercent = $notFinalized/$onGoing;
             $notFinalizedPercent = round($notFinalizedPercent*100,2).'%';
 
+            //CLAIMED
+            $sqlClaimed = "SELECT Count(*) FROM tbl_lbp_form a INNER JOIN tbl_heis b ON a.hei_uii = b.hei_uii WHERE b.hei_psg_region = '".$region."' AND status = 'Claimed' AND active_grantee = 'YES'";
+            $resClaimed = mysqli_query($connect, $sqlClaimed);
+            $checkClaimed = mysqli_num_rows($resClaimed);
+            if($checkClaimed > 0){
+                while($row=mysqli_fetch_assoc($resClaimed)){
+                    $claimed = $row['Count(*)'];
+                }
+            }
+            else{
+                $claimed = 0;
+            }   
+            $claimedPercent = $claimed/$onGoing;
+            $claimedPercent = round($claimedPercent*100,2).'%';
+
                         
             //TOTAL FINALIZED PROGRESS BAR
-            $totalFinalizedApplications = $finalized + $submitted + $appDAT + $approved;
+            $totalFinalizedApplications = $finalized + $submitted + $appDAT + $approved + $rejected + $claimed;
             $overAllFinalizedPercentage = $totalFinalizedApplications/$onGoing;
             $overAllFinalizedPercentage = round($overAllFinalizedPercentage*100,2);
 
@@ -287,6 +302,7 @@
                         </div>
                     </div>
                 </div><br>
+
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" style="margin-bottom:10px;">
                     <div class="card" style="border-color:#FF6663;">
                         <div class="card-body" style="background-color:#FF666388">
@@ -297,6 +313,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" style="margin-bottom:10px;">
+                    <div class="card" style="border-color:#b79ff1;">
+                        <div class="card-body" style="background-color:#b79ff188">
+                            <h5 class="card-title" style="font-family:sans-serif;color:#666;"><b>Claimed</b></h5>
+                            <hr>
+                            <div class="card-text" style="margin-bottom:8px;"><?php echo '<b style="font-size:20px;font-family:sans-serif;color:#555;">'.number_format($claimed).'</b> <span style="font-size:12px;color:#666;font-family:Bahnschrift;">Applications</span>'; ?></div>
+                            <div class="card-text"><?php echo '<b style="font-size:20px;font-family:sans-serif;color:#555;">'.$claimedPercent.'</b> <span style="font-size:12px;color:#666;font-family:Bahnschrift;">of Total Target</span>'; ?></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" style="margin-bottom:5px;">
                     <div class="card" style="border-color:#CCCCCC;">
                         <div class="card-body" style="background-color:#DDDDDD">
@@ -318,7 +346,7 @@
                 <div class="col-xl-10" style="margin-top:20px;">
                     <div class="card">
                         <div class="card-body">
-                            <canvas id="myChart" width="3" height="2"></canvas>
+                            <canvas id="myChart" width="4" height="3"></canvas>
                         </div>
                     </div>
                 </div>
@@ -519,17 +547,18 @@
         var myChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Not Finalized', 'Finalized', 'Submitted', 'Exported', 'Approved', 'Rejected'],
+                labels: ['Not Finalized', 'Finalized', 'Submitted', 'Exported', 'Approved', 'Rejected', 'Claimed'],
                 datasets: [{
                     label: 'Number of Students',
-                    data: [<?php echo $notFinalized; ?>, <?php echo $finalized; ?>, <?php echo $submitted; ?>, <?php echo $appDAT; ?>, <?php echo $approved; ?>, <?php echo $rejected; ?>],
+                    data: [<?php echo $notFinalized; ?>, <?php echo $finalized; ?>, <?php echo $submitted; ?>, <?php echo $appDAT; ?>, <?php echo $approved; ?>, <?php echo $rejected; ?>, <?php echo $claimed; ?>],
                     backgroundColor: [
                         '#FFE5B4',
                         '#9EE09E',
                         '#40cfb2',
                         '#9EC1CF',                        
                         '#FDFD97',
-                        '#FF6663'
+                        '#FF6663',
+                        '#B79FF1'
                     ],
                     borderColor: [
                         '#FFE5B4',
@@ -537,7 +566,8 @@
                         '#40cfb2',
                         '#9EC1CF',                        
                         '#FDFD97',
-                        '#FF6663'
+                        '#FF6663',
+                        '#B79FF1'
                     ],
                     borderWidth: 1
                 }]
