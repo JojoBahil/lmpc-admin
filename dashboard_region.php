@@ -12,7 +12,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>LMPC Application Admin Portal</title>
+        <title>LMPC Admin Portal</title>
+        <link rel="icon" type="image/x-icon" href="image/lmpcadminicon.ico">
         <script src="assets/js/jquery.min.js"></script>
         <script src="assets/datatables/datatables.min.js"></script> 
         <link rel="stylesheet" href="assets/datatables/datatables.min.css" />

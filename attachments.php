@@ -12,7 +12,8 @@
 <!DOCTYPE html>  
 <html>  
      <head>  
-          <title>TES Grantees</title>  
+          <title>LMPC Admin Portal</title>
+          <link rel="icon" type="image/x-icon" href="image/lmpcadminicon.ico">
           <script src="assets/js/jquery.min.js"></script>  
           <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
           <script src="assets/datatables/datatables.min.js"></script> 

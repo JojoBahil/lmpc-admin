@@ -11,8 +11,11 @@
 <!DOCTYPE html>  
 <html>  
      <head>  
-          <title>TES Grantees</title>  
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>LMPC Admin Portal</title>
           <script src="assets/js/jquery.min.js"></script>  
+          <link rel="icon" type="image/x-icon" href="image/lmpcadminicon.ico">
           <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
           <script src="assets/datatables/datatables.min.js"></script> 
           <link rel="stylesheet" href="assets/datatables/datatables.min.css" />

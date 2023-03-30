@@ -12,8 +12,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>LMPC Application Admin Portal</title>
-        <link rel="icon" type="image/png" href="image/favicon-16x16.png" />
+        <title>LMPC Admin Portal</title>
+        <link rel="icon" type="image/x-icon" href="image/lmpcadminicon.ico">
         <link rel="stylesheet" href="assets/css/loader.css">
         <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
