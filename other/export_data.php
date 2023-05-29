@@ -1591,7 +1591,6 @@ if(isset($_POST['btn_generate_datfile'])){
         AND a.tag != 'DUPLICATE' 
         AND a.active_grantee = 'YES' 
         AND a.lbp_branch_code IS NOT NULL
-        AND c.yearlevel != '4'
         AND wallet_number IS NULL 
         AND device_number IS NULL 
         ORDER BY b.hei_uii LIMIT 500";
