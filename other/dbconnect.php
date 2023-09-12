@@ -1,9 +1,9 @@
 <?php
 
 $dbservername = "localhost";
-$dbusername = "unifastgov_lmpc";
+$dbusername = "unifastgov_ufdb";
 
-$dbpassword = "7_d[MJB(#l8A";
+$dbpassword = "dJTBrFKM4aazRszR";
 $dbname = "unifastgov_ufdb";
 
 $connect = mysqli_connect($dbservername, $dbusername, $dbpassword, $dbname);
