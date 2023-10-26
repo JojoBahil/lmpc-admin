@@ -324,8 +324,10 @@ if(isset($_POST['btn_claim_update'])){
                 extract($insert_data);   
                 // var_dump($insert_data)  ;     
                 // echo '<br>'.$tes_award_number;       
+                
+                $claimUpdateDate = date("Y-m-d");
 
-                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Claimed' WHERE device_number = '$device_number' AND status = 'Approved' AND wallet_number IS NOT NULL AND device_number IS NOT NULL";
+                $sqlUpdateDetails = "UPDATE tbl_lbp_form SET status = 'Claimed', claim_update_date = '$claimUpdateDate' WHERE device_number = '$device_number' AND status = 'Approved' AND wallet_number IS NOT NULL AND device_number IS NOT NULL";
                 mysqli_query($connect, $sqlUpdateDetails);
 
                 if(mysqli_affected_rows($connect) >= 1){
